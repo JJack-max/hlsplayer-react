@@ -44,9 +44,10 @@ module.exports = {
     }),
     new CopyWebpackPlugin({
       patterns: [
+        // 仅复制图标，移除对 hls.js 的复制
         {
-          from: 'public/static',
-          to: 'static'
+          from: 'public/static/icon128.png',
+          to: 'static/icon128.png'
         },
         {
           from: 'public/manifest.json',

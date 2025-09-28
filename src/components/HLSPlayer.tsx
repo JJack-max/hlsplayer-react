@@ -1,12 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './HLSPlayer.css';
-
-// 声明全局HLS类型
-declare global {
-  interface Window {
-    Hls: any;
-  }
-}
+import Hls from 'hls.js';
 
 interface HLSPlayerProps {
   url: string;
@@ -33,9 +27,9 @@ const HLSPlayer: React.FC<HLSPlayerProps> = ({ url }) => {
     }
 
     const initializePlayer = () => {
-      if (window.Hls && window.Hls.isSupported()) {
+      if (Hls.isSupported()) {
         // 使用HLS.js
-        const hls = new window.Hls({
+        const hls = new Hls({
           enableWorker: true,
           lowLatencyMode: true,
         });
@@ -45,12 +39,12 @@ const HLSPlayer: React.FC<HLSPlayerProps> = ({ url }) => {
         hls.loadSource(m3u8Url);
         hls.attachMedia(video);
         
-        hls.on(window.Hls.Events.MANIFEST_PARSED, () => {
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
           setIsLoading(false);
           video.play().catch(console.error);
         });
         
-        hls.on(window.Hls.Events.ERROR, (event: any, data: any) => {
+        hls.on(Hls.Events.ERROR, (event: any, data: any) => {
           console.error('HLS error:', data);
           if (data.fatal) {
             setError(`播放错误: ${data.details}`);
@@ -76,27 +70,7 @@ const HLSPlayer: React.FC<HLSPlayerProps> = ({ url }) => {
       }
     };
 
-    // 如果HLS.js已经加载，直接初始化
-    if (window.Hls) {
-      initializePlayer();
-    } else {
-      // 等待HLS.js加载
-      const checkHls = setInterval(() => {
-        if (window.Hls) {
-          clearInterval(checkHls);
-          initializePlayer();
-        }
-      }, 100);
-      
-      // 5秒后超时
-      setTimeout(() => {
-        clearInterval(checkHls);
-        if (!window.Hls) {
-          setError('HLS.js加载失败');
-          setIsLoading(false);
-        }
-      }, 5000);
-    }
+    initializePlayer();
 
     // 设置页面标题
     document.title = m3u8Url;
