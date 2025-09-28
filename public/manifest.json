@@ -1,0 +1,31 @@
+{
+  "action": {
+    "default_icon": "static/icon128.png",
+    "default_popup": "popup.html",
+    "default_title": "HLS Player - m3u8 HTTP Live Streaming (HLS) Player"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [{
+    "js": ["content.js"],
+    "matches": ["<all_urls>"]
+  }],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
+  "description": "HLS Player - m3u8 HTTP Live Streaming (HLS) Player (React Version)",
+  "homepage_url": "https://www.hlsplayer.org/",
+  "host_permissions": ["*://*/*.m3u8*", "http://*/*", "https://*/*", "file:///*"],
+  "icons": {
+    "128": "static/icon128.png"
+  },
+  "manifest_version": 3,
+  "name": "HLS Player - m3u8 Streaming Player (React)",
+  "permissions": ["webRequest"],
+  "version": "4.0.0",
+  "web_accessible_resources": [{
+    "matches": ["<all_urls>"],
+    "resources": ["*.html", "*.js", "*.css", "*.png"]
+  }]
+}
